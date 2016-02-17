@@ -1,0 +1,4 @@
+*_deploy_v*.rb
+cap_tests.rb
+config.yml
+env.txt

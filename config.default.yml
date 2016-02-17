@@ -1,0 +1,78 @@
+# --- Common ---
+
+app_env:   <app_env> # local, development, stage, production
+app_name:  <app_name>
+deploy_tmp_dir: "/tmp/%s_deployment_%s"
+
+repo_info:
+  branch:   <branch>
+  host:     <host>
+  org:      <org>
+  project:  <project>
+  protocol: <protocol>
+  token:    <token>
+  user:     <user>
+
+# --- Backup ---
+
+backup:
+  config:
+    user: <user>
+    host: <host>
+    root: <directory>
+    files: ["'*/*'"]
+    name: <file_name.zip>
+  database:
+    db_name: <db_name>
+    db_pass: <db_pass>
+    db_user: <db_user>
+    user: <user>
+    host: <host>
+    root: <directory>
+    files: ["'*/*'"]
+    name: <file_name.zip>
+  public:
+    user: <user>
+    host: <host>
+    root: <directory>
+    files: ["'*/*'"]
+    name: <file_name.zip>
+
+# --- Deploy ---
+
+application:
+  ignore_files: ["'*/*'"]
+  local_root: <local-root>
+  nodes:
+    '<node_name>':
+      perms:
+        web_owner: <owner>
+        web_group: <group>
+        web_perms: <read, write, execute>
+      deployer: <user>
+      doc_root: </path/to/directory>
+
+configuration:
+  ignore_files: ["'*/*'"]
+  local_root: <local-root>
+  nodes:
+    '<node_name>':
+      perms:
+        web_owner: <owner>
+        web_group: <group>
+        web_perms: <read, write, execute>
+      deployer: <user>
+      doc_root: </path/to/directory>
+  shared_object_configs: ["'*/*'"]
+  shared_objects: ["'*/*'"]
+
+database:
+  ignore_files: ["'*/*'"]
+  local_root: <local-root>
+  nodes:
+    '<node_name>':
+      db_user:   <db-user>
+      db_pass:   <db-pass>
+      db_name:   <db-name>
+      deployer:  <user>
+
