@@ -9,8 +9,11 @@ namespace :setup do
       puts "on host: #{host}"
       as user: deployer do
         SSHKit::Backend::Netssh.config.pty = true
-
         doc_root = "#{host_settings['doc_root']}/#{config['app_name']}"
+        #if File.exists? File.join(doc_root, '.rake-deploy-setup')
+        #end
+        #unless setup_complete
+        #end
 
         #if test("[ -d #{doc_root} ]")
           #puts "skip directory creation"
@@ -20,7 +23,7 @@ namespace :setup do
         execute("sudo touch #{doc_root}/releases/current")
         upload!("#{config['backup']['config']['name']}", "/tmp")
         execute("sudo mv /tmp/#{config['backup']['config']['name']} #{doc_root}/shared/config/")
-        execute("sudo unzip #{doc_root}/shared/config/#{config['backup']['config']['name']} -d #{doc_root}/shared/config")
+        execute("sudo unzip -f #{doc_root}/shared/config/#{config['backup']['config']['name']} -d #{doc_root}/shared/config")
         execute("sudo rm #{doc_root}/shared/config/#{config['backup']['config']['name']}")
 
         perms = host_settings['perms']
@@ -51,7 +54,7 @@ namespace :setup do
         execute("sudo touch #{doc_root}/releases/current")
         upload!("#{config['backup']['public']['name']}", "/tmp")
         execute("sudo mv /tmp/#{config['backup']['public']['name']} #{doc_root}/shared/config/")
-        execute("sudo unzip #{doc_root}/shared/config/#{config['backup']['public']['name']} -d #{doc_root}/shared/config")
+        execute("sudo unzip -f #{doc_root}/shared/config/#{config['backup']['public']['name']} -d #{doc_root}/shared/config")
         execute("sudo rm #{doc_root}/shared/config/#{config['backup']['public']['name']}")
 
         perms = host_settings['perms']

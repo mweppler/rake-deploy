@@ -1,41 +1,41 @@
+desc 'Install gems that this app depends on. May need to be run with sudo.'
+task :install_dependencies do
+  dependencies = {
+    'json'       => '1.8.0',
+    'sshkit'     => '1.8.1',
+    'sshkit/dsl' => '1.8.1',
+    'yaml'       => '4.2.2',
+  }
+  dependencies.each do |gem_name, version|
+    puts "#{gem_name} #{version}"
+    system "gem install #{gem_name} --version #{version}"
+  end
+end
+
+require 'json'
 require 'sshkit'
 require 'sshkit/dsl'
 require 'yaml'
-
 require_relative 'lib/emailer'
 
 Rake.add_rakelib 'lib/tasks'
 
-# ssh = 'ssh -i ~/.ssh/key.pem deployer@node'
-# crontab = '0 0 * * * {node_app_root}/{app_name}/releases/current/bin/some_command > {node_app_root}/{app_name}/releases/current/log/cron.`date +"\%Y\%m\%d"`.log 2>&1'
-#
-# Assumptions:
-#   * sudo visudo has `Defaults requiretty` commented out & `Defaults visibilepw` line not commented out (or added)
-#
-#     #Defaults    requiretty
-#     Defaults   visiblepw
-#
-#   * deployer has password-less sudo for the necessary commands
-#       deployer ALL=(ALL)       NOPASSWD: ALL
-#
-#   * .ssh/config file exists and password less login for deployer@app_nodes
-#       $ ssh-keygen -t rsa -C "deployer"
-#
-#       Host app_node_1
-#       HostName app_node_1.domain.com
-#       User deployer
-#       IdentityFile ~/.ssh/deployer_rsa
-#       PreferredAuthentications publickey
-#
-#   * app_nodes:~/.ssh/authorized_keys exists with the public key for deployer
-#       $ vi ~/.ssh/authorized_keys
-#       ssh-rsa ... deployer
-#
-#   * app_nodes have set the httpd.conf document root to {node_app_root}/{app_name}/releases/current
+env = ''
+if ENV['DEPLOY_ENV']
+  env = ENV['DEPLOY_ENV']
+end
 
-@config = YAML.load_file("./config.yml")
+if File.exists? "./config-#{ENV['DEPLOY_ENV']}.yml"
+  @config = YAML.load_file("./config-#{ENV['DEPLOY_ENV']}.yml")
+elsif File.exists? "./config.#{ENV['DEPLOY_ENV']}.yml"
+  @config = YAML.load_file("./config.#{ENV['DEPLOY_ENV']}.yml")
+elsif File.exists? "./config.yml"
+  @config = YAML.load_file("./config.yml")
+else
+  puts 'Couldn\'t find a configuration file. Quitting...'
+  exit 1
+end
 @timestamp = Time.now.strftime('%Y%m%d%H%M%S%Z')
-#@timestamp = '20151208153223PST'
 
 task 'backup:both'   => ['backup:config', 'backup:public']
 task 'db:migrate'    => ['deploy:common']

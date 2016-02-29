@@ -12,8 +12,13 @@ namespace :deploy do
     proto   = config['repo_info']['protocol']
     token   = config['repo_info']['token']
     user    = config['repo_info']['user']
+    use_key = config['repo_info']['use_ssh_key']
 
-    github_clone = "git clone #{proto}://#{user}:#{token}@#{host}/#{org}/#{project}.git #{app_name}"
+    if use_key.nil? || use_key == false
+      github_clone = "git clone #{proto}://#{user}:#{token}@#{host}/#{org}/#{project}.git #{app_name}"
+    else
+      github_clone = "git clone #{user}@#{host}:#{org}/#{project}.git #{app_name}"
+    end
 
     run_locally do
       execute("mkdir -p #{deploy_tmp_dir}")

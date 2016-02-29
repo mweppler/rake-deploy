@@ -3,13 +3,15 @@ namespace :backup do
   task :config do
     config = @config
     backup = config['backup']['config']
-    on "#{backup['host']}" do |host|
-      as user: backup['user'] do
-        SSHKit::Backend::Netssh.config.pty = true
-        execute("cd #{backup['root']} && zip -r #{backup['name']} . #{backup['files'].map{ |f| '-i ' + f }.join(' ')}")
-        execute("cd #{backup['root']} && mv #{backup['name']} /tmp/")
-        download!("/tmp/#{backup['name']}", ".")
-        execute("rm /tmp/#{backup['name']}")
+    unless File.exists? backup['name']
+      on "#{backup['host']}" do |host|
+        as user: backup['user'] do
+          SSHKit::Backend::Netssh.config.pty = true
+          execute("cd #{backup['root']} && zip -r #{backup['name']} . #{backup['files'].map{ |f| '-i ' + f }.join(' ')}")
+          execute("cd #{backup['root']} && mv #{backup['name']} /tmp/")
+          download!("/tmp/#{backup['name']}", ".")
+          execute("rm /tmp/#{backup['name']}")
+        end
       end
     end
   end
@@ -18,12 +20,14 @@ namespace :backup do
   task :database do
     config = @config
     backup = config['backup']['database']
-    on "#{backup['host']}" do |host|
-      as user: backup['user'] do
-        SSHKit::Backend::Netssh.config.pty = true
-        execute("mysqldump --user='#{backup['db_user']}' --password='#{backup['db_pass']}' #{backup['db_name']} | zip > #{backup['name']}")
-        download!("#{backup['name']}", ".")
-        execute("rm #{backup['name']}")
+    unless File.exists? backup['name']
+      on "#{backup['host']}" do |host|
+        as user: backup['user'] do
+          SSHKit::Backend::Netssh.config.pty = true
+          execute("mysqldump --user='#{backup['db_user']}' --password='#{backup['db_pass']}' #{backup['db_name']} | zip > #{backup['name']}")
+          download!("#{backup['name']}", ".")
+          execute("rm #{backup['name']}")
+        end
       end
     end
   end
@@ -32,13 +36,15 @@ namespace :backup do
   task :public do
     config = @config
     backup = config['backup']['public']
-    on "#{backup['host']}" do |host|
-      as user: backup['user'] do
-        SSHKit::Backend::Netssh.config.pty = true
-        execute("cd #{backup['root']} && zip -r #{backup['name']} . #{backup['files'].map{ |f| '-i ' + f }.join(' ')}")
-        execute("cd #{backup['root']} && mv #{backup['name']} /tmp/")
-        download!("/tmp/#{backup['name']}", ".")
-        execute("rm /tmp/#{backup['name']}")
+    unless File.exists? backup['name']
+      on "#{backup['host']}" do |host|
+        as user: backup['user'] do
+          SSHKit::Backend::Netssh.config.pty = true
+          execute("cd #{backup['root']} && zip -r #{backup['name']} . #{backup['files'].map{ |f| '-i ' + f }.join(' ')}")
+          execute("cd #{backup['root']} && mv #{backup['name']} /tmp/")
+          download!("/tmp/#{backup['name']}", ".")
+          execute("rm /tmp/#{backup['name']}")
+        end
       end
     end
   end

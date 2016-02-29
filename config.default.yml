@@ -12,6 +12,7 @@ repo_info:
   protocol: <protocol>
   token:    <token>
   user:     <user>
+  use_ssh_key: <true|false>
 
 # --- Backup ---
 
