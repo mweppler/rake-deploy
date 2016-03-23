@@ -8,6 +8,7 @@ namespace :deploy do
     app_name = config['app_name']
     config_files = config['backup']['public']['files']
     ignore_files = config[deploy_type]['ignore_files']
+    shared_dir  = config[deploy_type]['shared_dir']
     deploy_tmp_dir = sprintf(config['deploy_tmp_dir'], app_name, timestamp)
     arch_name = "#{app_name}-#{timestamp}.zip"
 
@@ -62,6 +63,9 @@ namespace :deploy do
         config_files.each do |config_file|
           execute("sudo ln -s #{doc_root}/shared/config/#{config_file} #{doc_root}/releases/current/#{config_file}")
         end
+
+        # Symlink images
+        execute("sudo ln -s #{shared_dir}/images/headshots #{doc_root}/releases/#{timestamp}/images/headshots")
 
         perms = host_settings['perms']
         # Change files permissions

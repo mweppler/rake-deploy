@@ -16,7 +16,7 @@ require 'json'
 require 'sshkit'
 require 'sshkit/dsl'
 require 'yaml'
-require_relative 'lib/emailer'
+#require_relative 'lib/emailer'
 
 Rake.add_rakelib 'lib/tasks'
 

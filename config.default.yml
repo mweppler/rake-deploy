@@ -52,6 +52,7 @@ application:
         web_perms: <read, write, execute>
       deployer: <user>
       doc_root: </path/to/directory>
+  shared_dir: </path/to/directory>
 
 configuration:
   ignore_files: ["'*/*'"]
