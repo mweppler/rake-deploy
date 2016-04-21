@@ -49,7 +49,9 @@ namespace :deploy do
         # TOOD: Handle failure by reverting to the previous release
 
         # Remove previous symlinked config files
-        execute("sudo rm #{doc_root}/releases/current")
+        if test("[ -d #{doc_root}/releases/current ]")
+          execute("sudo rm #{doc_root}/releases/current")
+        end
 
         # Upload the app, unzip & symlink to current release
         upload!(arch_name, "/tmp")
@@ -66,6 +68,7 @@ namespace :deploy do
 
         # Symlink images
         execute("sudo ln -s #{shared_dir}/images/headshots #{doc_root}/releases/#{timestamp}/images/headshots")
+        execute("sudo ln -s #{shared_dir}/images/panos #{doc_root}/releases/#{timestamp}/images/panos")
 
         perms = host_settings['perms']
         # Change files permissions
