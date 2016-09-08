@@ -42,6 +42,7 @@ backup:
 # --- Deploy ---
 
 application:
+  app_dirs: ["'*/*'"]
   ignore_files: ["'*/*'"]
   local_root: <local-root>
   nodes:

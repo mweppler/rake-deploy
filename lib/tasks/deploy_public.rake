@@ -21,7 +21,7 @@ namespace :deploy do
     end
     Dir.chdir "#{deploy_tmp_dir}/#{app_name}/#{config[deploy_type]['local_root']}"
     run_locally do
-      execute("zip -r #{arch_name} * #{ignore_files.map{ |f| '-x ' + f }.join(' ')}")
+      execute("zip -r #{arch_name} #{app_dirs.map{ |d| d }.join('/* ')} #{ignore_files.map{ |f| '-x ' + f }.join(' ')}")
       execute("mv #{arch_name} ../../")
     end
 
@@ -63,12 +63,12 @@ namespace :deploy do
 
         # Symlink config files
         config_files.each do |config_file|
-          execute("sudo ln -s #{doc_root}/shared/config/#{config_file} #{doc_root}/releases/current/#{config_file}")
+          execute("sudo ln -s #{doc_root}/shared/config/#{config_file} #{doc_root}/releases/current/public/#{config_file}")
         end
 
         # Symlink images
-        execute("sudo ln -s #{shared_dir}/images/headshots #{doc_root}/releases/#{timestamp}/images/headshots")
-        execute("sudo ln -s #{shared_dir}/images/panos #{doc_root}/releases/#{timestamp}/images/panos")
+        execute("sudo ln -s #{shared_dir}/images/headshots #{doc_root}/releases/#{timestamp}/public/images/headshots")
+        execute("sudo ln -s #{shared_dir}/images/panos #{doc_root}/releases/#{timestamp}/public/images/panos")
 
         perms = host_settings['perms']
         # Change files permissions
