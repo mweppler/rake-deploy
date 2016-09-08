@@ -7,6 +7,7 @@ namespace :deploy do
 
     app_name = config['app_name']
     config_files = config['backup']['public']['files']
+    app_dirs = config[deploy_type]['app_dirs']
     ignore_files = config[deploy_type]['ignore_files']
     shared_dir  = config[deploy_type]['shared_dir']
     deploy_tmp_dir = sprintf(config['deploy_tmp_dir'], app_name, timestamp)
