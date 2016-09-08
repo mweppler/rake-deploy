@@ -22,7 +22,7 @@ namespace :deploy do
     end
     Dir.chdir "#{deploy_tmp_dir}/#{app_name}/#{config[deploy_type]['local_root']}"
     run_locally do
-      execute("zip -r #{arch_name} #{app_dirs.map{ |d| d }.join('/* ')} #{ignore_files.map{ |f| '-x ' + f }.join(' ')}")
+      execute("zip -r #{arch_name} #{app_dirs.map{ |d| d }.join(' ')} #{ignore_files.map{ |f| '-x ' + f }.join(' ')}")
       execute("mv #{arch_name} ../../")
     end
 
