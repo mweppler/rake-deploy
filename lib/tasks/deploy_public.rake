@@ -22,8 +22,8 @@ namespace :deploy do
     end
     Dir.chdir "#{deploy_tmp_dir}/#{app_name}/#{config[deploy_type]['local_root']}"
     run_locally do
-      execute("zip -r #{arch_name} #{app_dirs.map{ |d| d }.join(' ')} #{ignore_files.map{ |f| '-x ' + f }.join(' ')}")
-      execute("mv #{arch_name} ../../")
+      execute("zip -r #{arch_name} . -i #{app_dirs.map{ |d| "\"#{d}/*\"" }.join(' ')} #{ignore_files.map{ |f| '-x ' + f }.join(' ')}")
+      execute("mv #{arch_name} ../")
     end
 
     # Change back to base directory
@@ -50,7 +50,7 @@ namespace :deploy do
         # TOOD: Handle failure by reverting to the previous release
 
         # Remove previous symlinked config files
-        if test("[ -d #{doc_root}/releases/current ]")
+        if test("[ -h #{doc_root}/releases/current ]")
           execute("sudo rm #{doc_root}/releases/current")
         end
 
@@ -71,8 +71,8 @@ namespace :deploy do
         execute("sudo ln -s #{shared_dir}/images/headshots #{doc_root}/releases/#{timestamp}/public/images/headshots")
         execute("sudo ln -s #{shared_dir}/images/panos #{doc_root}/releases/#{timestamp}/public/images/panos")
 
-        perms = host_settings['perms']
         # Change files permissions
+        perms = host_settings['perms']
         execute("sudo chown -R #{perms['web_owner']}:#{perms['web_group']} #{doc_root}")
         execute("sudo chmod -R ug+#{perms['web_perms']} #{doc_root}")
       end
